@@ -10,16 +10,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class MixinServerPlayerEntity implements LeashImpl {
+    @Shadow
+    public abstract ServerWorld getServerWorld();
+
     private final ServerPlayerEntity leashplayers$self = (ServerPlayerEntity) (Object) this;
     private final LeashSettings leashplayers$settings = LeashPlayers.getSettings(leashplayers$self.getWorld());
 
@@ -130,7 +135,7 @@ public abstract class MixinServerPlayerEntity implements LeashImpl {
     }
 
     private void leashplayers$drop() {
-        leashplayers$self.dropItem(Items.LEAD);
+        leashplayers$self.dropItem(this.getServerWorld(), Items.LEAD);
     }
 
     @Inject(method = "tick()V", at = @At("TAIL"))

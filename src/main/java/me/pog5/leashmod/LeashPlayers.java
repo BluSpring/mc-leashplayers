@@ -15,7 +15,7 @@ public final class LeashPlayers implements ModInitializer {
     public static LeashSettings getSettings(World world) {
         return new LeashSettings() {
             private GameRules getGameRules() {
-                return world.getGameRules();
+                return world.getServer().getGameRules();
             }
 
             @Override
